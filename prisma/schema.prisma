@@ -1,0 +1,353 @@
+// Himkok Dashboard - Database Schema
+// Financial Data Management with Conflict Resolution
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USER & AUTHENTICATION
+// ============================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  role          String    @default("employee") // admin, manager, employee
+  
+  // Relations
+  conflictsResolved  Conflict[]
+  projectionsCreated Projection[]
+  researchEntriesCreated ResearchEntry[]
+  meetingNotesCreated    MeetingNote[]
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// ============================================
+// FINANCIAL DATA
+// ============================================
+
+model FinancialPeriod {
+  id              String   @id @default(cuid())
+  year            Int
+  quarter         Int?     // Optional for quarterly data (1-4)
+  month           Int?     // Optional for monthly data (1-12)
+  
+  // Income Statement (P&L)
+  revenue         Decimal  @db.Decimal(15, 2)
+  cogs            Decimal  @db.Decimal(15, 2) // Cost of Goods Sold
+  grossProfit     Decimal  @db.Decimal(15, 2)
+  laborCosts      Decimal  @db.Decimal(15, 2)
+  operatingCosts  Decimal  @db.Decimal(15, 2)
+  depreciation    Decimal  @db.Decimal(15, 2)
+  ebitda          Decimal  @db.Decimal(15, 2)
+  ebit            Decimal  @db.Decimal(15, 2)
+  financialIncome Decimal  @db.Decimal(15, 2)
+  financialCosts  Decimal  @db.Decimal(15, 2)
+  pretaxProfit    Decimal  @db.Decimal(15, 2)
+  taxes           Decimal  @db.Decimal(15, 2)
+  netProfit       Decimal  @db.Decimal(15, 2)
+  
+  // Balance Sheet
+  totalAssets        Decimal  @db.Decimal(15, 2)
+  currentAssets      Decimal  @db.Decimal(15, 2)
+  fixedAssets        Decimal  @db.Decimal(15, 2)
+  financialAssets    Decimal  @db.Decimal(15, 2)
+  totalLiabilities   Decimal  @db.Decimal(15, 2)
+  currentLiabilities Decimal  @db.Decimal(15, 2)
+  longTermDebt       Decimal  @db.Decimal(15, 2)
+  equity             Decimal  @db.Decimal(15, 2)
+  cashAndBank        Decimal  @db.Decimal(15, 2)
+  
+  // Cash Flow
+  operatingCashFlow  Decimal  @db.Decimal(15, 2)
+  investingCashFlow  Decimal? @db.Decimal(15, 2)
+  financingCashFlow  Decimal? @db.Decimal(15, 2)
+  
+  // Revenue Segments
+  barRevenue         Decimal  @db.Decimal(15, 2)
+  distilleryRevenue  Decimal  @db.Decimal(15, 2)
+  rtdRevenue         Decimal  @db.Decimal(15, 2)
+  consultingRevenue  Decimal  @db.Decimal(15, 2)
+  otherRevenue       Decimal  @db.Decimal(15, 2)
+  
+  // Operational Metrics
+  employees          Int?
+  inventoryValue     Decimal? @db.Decimal(15, 2)
+  accountsReceivable Decimal? @db.Decimal(15, 2)
+  accountsPayable    Decimal? @db.Decimal(15, 2)
+  
+  // Calculated KPIs (stored for performance)
+  grossMargin     Decimal  @db.Decimal(5, 2) // percentage
+  ebitdaMargin    Decimal  @db.Decimal(5, 2)
+  netMargin       Decimal  @db.Decimal(5, 2)
+  debtToEquity    Decimal? @db.Decimal(10, 2)
+  currentRatio    Decimal? @db.Decimal(10, 2)
+  quickRatio      Decimal? @db.Decimal(10, 2)
+  
+  // Metadata
+  dataSource       String   // "Proff.no", "Internal Accounting", "Executive Summary", etc.
+  verified         Boolean  @default(false)
+  verifiedBy       String?
+  verifiedAt       DateTime?
+  notes            String?  @db.Text
+  
+  // Relations
+  conflicts        Conflict[]
+  
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  
+  @@unique([year, quarter, month])
+  @@index([year])
+  @@index([verified])
+}
+
+// ============================================
+// CONFLICT TRACKING
+// ============================================
+
+model Conflict {
+  id              String   @id @default(cuid())
+  
+  // Conflict details
+  field           String   // "revenue", "ebitda", etc.
+  value1          Decimal  @db.Decimal(15, 2)
+  source1         String
+  value2          Decimal  @db.Decimal(15, 2)
+  source2         String
+  difference      Decimal  @db.Decimal(15, 2) // Absolute difference
+  percentDiff     Decimal? @db.Decimal(5, 2)  // Percentage difference
+  
+  // Resolution
+  resolved        Boolean  @default(false)
+  resolution      String?  @db.Text // Explanation of how it was resolved
+  chosenValue     Decimal? @db.Decimal(15, 2)
+  chosenSource    String?
+  resolvedBy      User?    @relation(fields: [resolvedById], references: [id])
+  resolvedById    String?
+  resolvedAt      DateTime?
+  
+  // Link to period
+  period          FinancialPeriod @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  periodId        String
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([resolved])
+  @@index([periodId])
+}
+
+// ============================================
+// PROJECTIONS & SCENARIOS
+// ============================================
+
+model Projection {
+  id              String   @id @default(cuid())
+  name            String   // "2025 Base Case", "2026 Optimistic"
+  year            Int
+  scenario        String   // "conservative", "base", "optimistic"
+  description     String?  @db.Text
+  
+  // Projected values
+  revenue         Decimal  @db.Decimal(15, 2)
+  ebitda          Decimal  @db.Decimal(15, 2)
+  netProfit       Decimal  @db.Decimal(15, 2)
+  
+  // Segment projections
+  barRevenue         Decimal? @db.Decimal(15, 2)
+  distilleryRevenue  Decimal? @db.Decimal(15, 2)
+  rtdRevenue         Decimal? @db.Decimal(15, 2)
+  consultingRevenue  Decimal? @db.Decimal(15, 2)
+  
+  // Assumptions (adjustable parameters)
+  assumptions     ProjectionAssumption[]
+  
+  // Metadata
+  isActive        Boolean  @default(true)
+  createdBy       User     @relation(fields: [createdById], references: [id])
+  createdById     String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([year])
+  @@index([scenario])
+}
+
+model ProjectionAssumption {
+  id              String   @id @default(cuid())
+  name            String   // "RTD growth rate", "Labor cost as % of revenue"
+  category        String   // "revenue", "costs", "market"
+  value           Decimal  @db.Decimal(10, 4)
+  unit            String   // "%", "NOK", "multiplier"
+  description     String?
+  
+  projection      Projection @relation(fields: [projectionId], references: [id], onDelete: Cascade)
+  projectionId    String
+  
+  @@index([projectionId])
+}
+
+// ============================================
+// PITCH DECKS
+// ============================================
+
+model PitchDeck {
+  id              String   @id @default(cuid())
+  title           String
+  version         String
+  fileName        String
+  filePath        String   // Relative path in storage
+  fileType        String   // "pdf", "pptx"
+  fileSize        Int      // bytes
+  
+  // Categorization
+  audience        String   // "investors", "partners", "distributors", "retailers"
+  valueChainPosition String? // "suppliers", "retailers", "distributors", "consumers"
+  focus           String[] // ["RTD", "Whiskey", "Bar Operations", "Connect Spirit"]
+  
+  // Visual
+  pageCount       Int?
+  thumbnailPath   String?  // Path to generated thumbnails
+  
+  // Metadata
+  date            DateTime?
+  status          String   @default("active") // "draft", "active", "archived"
+  description     String?  @db.Text
+  keyHighlights   String[] // Array of key points
+  tags            String[]
+  
+  // Versioning
+  parentDeckId    String?
+  parentDeck      PitchDeck? @relation("DeckVersions", fields: [parentDeckId], references: [id])
+  childDecks      PitchDeck[] @relation("DeckVersions")
+  
+  // Related documents
+  relatedMeetings MeetingNote[]
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([audience])
+  @@index([status])
+  @@index([date])
+}
+
+// ============================================
+// MEETING NOTES
+// ============================================
+
+model MeetingNote {
+  id              String   @id @default(cuid())
+  title           String
+  date            DateTime
+  attendees       String[] // Array of names
+  location        String?
+  
+  // Content
+  transcript      String   @db.Text // Full transcript
+  summary         String?  @db.Text // AI-generated summary
+  keyPoints       String[] // Extracted key points
+  decisions       String[] // Decisions made
+  actionItems     ActionItem[]
+  
+  // Categorization
+  topics          String[] // ["RTD", "Finance", "Expansion", etc.]
+  tags            String[]
+  
+  // Related documents
+  relatedPitchDecks PitchDeck[] // Many-to-many
+  relatedResearch   ResearchEntry[]
+  
+  // Metadata
+  sourceFile      String?  // Original file path
+  createdBy       User     @relation(fields: [createdById], references: [id])
+  createdById     String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([date])
+  @@index([createdById])
+}
+
+model ActionItem {
+  id              String   @id @default(cuid())
+  description     String
+  assignedTo      String?
+  dueDate         DateTime?
+  status          String   @default("open") // "open", "in-progress", "completed"
+  completedAt     DateTime?
+  
+  meeting         MeetingNote @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  meetingId       String
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([status])
+  @@index([dueDate])
+}
+
+// ============================================
+// RESEARCH DATABASE
+// ============================================
+
+model ResearchEntry {
+  id              String   @id @default(cuid())
+  title           String
+  summary         String   @db.Text
+  content         String?  @db.Text
+  
+  // Source & Verification
+  source          String   // "Market Report", "Internal Analysis", "Consultant Study"
+  sourceFile      String?  // Original file path
+  verificationStatus String @default("unverified") // "verified", "unverified", "conflicted"
+  verifiedBy      String?
+  verifiedAt      DateTime?
+  
+  // Data points (extractable metrics)
+  dataPoints      ResearchDataPoint[]
+  
+  // Categorization
+  category        String   // "Market", "Finance", "Operations", "Competition"
+  topics          String[]
+  tags            String[]
+  
+  // Metadata
+  datePublished   DateTime?
+  dateAdded       DateTime @default(now())
+  createdBy       User     @relation(fields: [createdById], references: [id])
+  createdById     String
+  
+  // Related
+  relatedMeetings MeetingNote[]
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([verificationStatus])
+  @@index([category])
+  @@index([dateAdded])
+}
+
+model ResearchDataPoint {
+  id              String   @id @default(cuid())
+  metric          String   // "Market Size", "Growth Rate", "Customer Count"
+  value           String   // Could be number, text, or percentage
+  unit            String?  // "NOK", "%", "units"
+  year            Int?
+  
+  researchEntry   ResearchEntry @relation(fields: [researchEntryId], references: [id], onDelete: Cascade)
+  researchEntryId String
+  
+  @@index([researchEntryId])
+  @@index([metric])
+}
