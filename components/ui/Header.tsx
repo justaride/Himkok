@@ -19,6 +19,8 @@ import {
     Building2,
     Settings,
     Search,
+    GraduationCap,
+    Laptop,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -33,6 +35,8 @@ const navigation = [
     { name: 'Research', href: '/research', icon: Database },
     { name: 'Meetings', href: '/meetings', icon: Users },
     { name: 'Brand', href: '/brand', icon: ImageIcon },
+    { name: 'Courses', href: '/courses', icon: GraduationCap },
+    { name: 'Platform', href: '/platform', icon: Laptop },
     { name: 'Company', href: '/company', icon: Building2 },
 ];
 
@@ -68,7 +72,7 @@ export function Header() {
                         </Link>
 
                         {/* Desktop Navigation */}
-                        <nav className="hidden md:ml-12 md:flex md:space-x-8">
+                        <nav className="hidden 2xl:ml-6 2xl:flex 2xl:space-x-4">
                             {navigation.map((item) => {
                                 const isActive = pathname === item.href;
                                 return (
@@ -108,7 +112,7 @@ export function Header() {
                     </div>
 
                     {/* Mobile Menu Button */}
-                    <div className="flex md:hidden">
+                    <div className="flex 2xl:hidden">
                         <button
                             onClick={() => setIsSearchOpen(true)}
                             className="p-2 mr-2 text-text-secondary hover:text-primary"
@@ -133,7 +137,7 @@ export function Header() {
 
             {/* Mobile Menu */}
             {isMobileMenuOpen && (
-                <div className="md:hidden bg-surface border-b border-border">
+                <div className="2xl:hidden bg-surface border-b border-border">
                     <div className="space-y-1 px-2 pb-3 pt-2">
                         {navigation.map((item) => {
                             const isActive = pathname === item.href;

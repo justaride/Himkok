@@ -14,9 +14,15 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
+import { DisclaimerModal } from '@/components/ui/DisclaimerModal';
+import { DevelopmentDisclaimer } from '@/components/ui/DevelopmentDisclaimer';
+
 export default function Home() {
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <main className="min-h-screen p-8 space-y-8 pb-24">
+      <DisclaimerModal />
+      <DevelopmentDisclaimer />
+
       {/* Welcome Section */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold tracking-tight mb-2">
@@ -165,6 +171,6 @@ export default function Home() {
         </Card>
 
       </div>
-    </div>
+    </main>
   );
 }

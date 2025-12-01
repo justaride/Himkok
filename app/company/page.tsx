@@ -11,10 +11,12 @@ import {
     Sprout,
     Truck
 } from 'lucide-react';
+import { DevelopmentDisclaimer } from '@/components/ui/DevelopmentDisclaimer';
 
 export default function CompanyPage() {
     return (
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+            <DevelopmentDisclaimer className="mb-8" />
             {/* Hero Section */}
             <div className="mb-12 text-center">
                 <h1 className="text-4xl font-bold text-text-primary mb-4">Himkok</h1>

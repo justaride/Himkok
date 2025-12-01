@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { MeetingCard } from '@/components/meetings/MeetingCard';
 import { FileText, Calendar, Users, Tag } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/Card';
+import { DevelopmentDisclaimer } from '@/components/ui/DevelopmentDisclaimer';
 
 const prisma = new PrismaClient();
 
@@ -28,6 +29,7 @@ export default async function MeetingsPage() {
 
     return (
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+            <DevelopmentDisclaimer className="mb-8" />
             {/* Header */}
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-text-primary mb-2 flex items-center">

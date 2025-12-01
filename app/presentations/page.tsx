@@ -14,6 +14,7 @@ import {
     Search,
     X
 } from 'lucide-react';
+import { DevelopmentDisclaimer } from '@/components/ui/DevelopmentDisclaimer';
 
 interface PitchDeck {
     id: string;
@@ -102,6 +103,7 @@ export default function PresentationsPage() {
 
     return (
         <div className="container mx-auto p-6 space-y-6">
+            <DevelopmentDisclaimer />
             {/* Header */}
             <div>
                 <h1 className="text-4xl font-bold text-gradient">Presentations</h1>

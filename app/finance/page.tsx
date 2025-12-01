@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { TrendingUp, TrendingDown, DollarSign, Users, PieChart, AlertTriangle } from 'lucide-react';
+import { TrendingUp, TrendingDown, DollarSign, Users, PieChart, AlertTriangle, Info } from 'lucide-react';
 import { FinancialCharts } from '@/components/finance/FinancialCharts';
 import { MetricCard } from '@/components/finance/MetricCard';
+import { DevelopmentDisclaimer } from '@/components/ui/DevelopmentDisclaimer';
 
 interface FinancialPeriod {
     id: string;
@@ -97,6 +98,9 @@ export default function FinancialDashboard() {
                     ))}
                 </div>
             </div>
+
+            {/* Disclaimer Banner */}
+            <DevelopmentDisclaimer className="mb-4" />
 
             {/* Warnings */}
             {currentPeriod && currentPeriod.conflicts.length > 0 && (

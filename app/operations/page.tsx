@@ -1,197 +1,106 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card';
-import {
-    Settings,
-    Zap,
-    Users,
-    Truck,
-    Leaf,
-    ShieldCheck,
-    BarChart3,
-    Clock,
-    Droplets
-} from 'lucide-react';
+import { MetricCard } from '@/components/finance/MetricCard';
+import { SupplyChainWidget } from '@/components/operations/SupplyChainWidget';
+import { ProductionStatus } from '@/components/operations/ProductionStatus';
+import { Droplets, Zap, Users, Box, BarChart3 } from 'lucide-react';
+import { DevelopmentDisclaimer } from '@/components/ui/DevelopmentDisclaimer';
 
 export default function OperationsPage() {
     return (
-        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-            {/* Hero Section */}
-            <div className="mb-12 text-center">
-                <h1 className="text-4xl font-bold text-text-primary mb-4">Operations</h1>
-                <p className="text-xl text-text-secondary max-w-3xl mx-auto">
-                    Operational Excellence & Supply Chain Management
-                </p>
-                <p className="mt-4 text-lg text-text-secondary max-w-4xl mx-auto">
-                    Himkok operates a unique bar-distillery hybrid model, refining operations for efficiency,
-                    consistency, and quality. A remarkable 85% of all beverages served are produced in-house.
-                </p>
+        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
+            <DevelopmentDisclaimer />
+            {/* Header */}
+            <div className="flex justify-between items-end">
+                <div>
+                    <h1 className="text-4xl font-bold text-gradient mb-2">Operations Center</h1>
+                    <p className="text-text-secondary text-lg">
+                        Real-time oversight of production, logistics, and efficiency.
+                    </p>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                    <span className="text-sm font-medium text-green-500">Systems Nominal</span>
+                </div>
             </div>
 
-            {/* Operational Excellence Grid */}
-            <section className="mb-16">
-                <h2 className="text-3xl font-bold text-text-primary mb-8 flex items-center gap-3">
-                    <Settings className="h-8 w-8 text-primary" />
-                    Operational Excellence
-                </h2>
-                <div className="grid gap-6 md:grid-cols-3">
-                    {/* Vertical Integration */}
-                    <Card>
-                        <CardHeader>
-                            <div className="w-12 h-12 bg-surface-elevated rounded-lg flex items-center justify-center mb-4">
-                                <Droplets className="h-6 w-6 text-accent" />
-                            </div>
-                            <CardTitle>Vertical Integration</CardTitle>
-                            <CardDescription>Bar-Distillery Hybrid</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-sm text-text-secondary mb-4">
-                                Minimizes reliance on external suppliers. Quality control is managed on-site from start to finish.
-                            </p>
-                            <div className="flex items-center gap-2 text-primary font-bold">
-                                <span className="text-2xl">85%</span>
-                                <span className="text-sm font-normal text-text-secondary">In-house production</span>
-                            </div>
-                        </CardContent>
-                    </Card>
+            {/* Key Metrics Bento Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <MetricCard
+                    title="Annual Production"
+                    value="10,000L"
+                    trend={12}
+                    trendLabel="In-House Capacity"
+                    icon={<Droplets size={20} />}
+                />
+                <MetricCard
+                    title="RTD Volume"
+                    value="100k L"
+                    trend={80}
+                    trendLabel="YoY Growth"
+                    icon={<Box size={20} />}
+                />
+                <MetricCard
+                    title="Staff Efficiency"
+                    value="1.26M NOK"
+                    trend={5}
+                    trendLabel="Rev/Employee"
+                    icon={<Users size={20} />}
+                />
+                <MetricCard
+                    title="Inventory Turnover"
+                    value="4.6x"
+                    trend={0}
+                    trendLabel="Annual Rate"
+                    icon={<Box size={20} />}
+                />
+            </div>
 
-                    {/* Taptails System */}
-                    <Card>
-                        <CardHeader>
-                            <div className="w-12 h-12 bg-surface-elevated rounded-lg flex items-center justify-center mb-4">
-                                <Zap className="h-6 w-6 text-yellow-500" />
-                            </div>
-                            <CardTitle>"Taptails" System</CardTitle>
-                            <CardDescription>High-Volume Efficiency</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-sm text-text-secondary mb-4">
-                                Cocktails on tap allow for rapid service without sacrificing quality.
-                                Drinks are pre-batched, carbonated, or kegged.
-                            </p>
-                            <div className="flex items-center gap-2 text-primary font-bold">
-                                <span className="text-2xl">&lt;1 min</span>
-                                <span className="text-sm font-normal text-text-secondary">Service time per drink</span>
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    {/* Lean Staffing */}
-                    <Card>
-                        <CardHeader>
-                            <div className="w-12 h-12 bg-surface-elevated rounded-lg flex items-center justify-center mb-4">
-                                <Users className="h-6 w-6 text-blue-500" />
-                            </div>
-                            <CardTitle>Lean Staffing</CardTitle>
-                            <CardDescription>Optimized Labor</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-sm text-text-secondary mb-4">
-                                Cross-trained staff and distinct service zones allow a small team to handle high capacity.
-                            </p>
-                            <div className="flex items-center gap-2 text-primary font-bold">
-                                <span className="text-2xl">13</span>
-                                <span className="text-sm font-normal text-text-secondary">Staff for 450 guests</span>
-                            </div>
-                        </CardContent>
-                    </Card>
+            {/* Main Dashboard Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-auto lg:h-[400px]">
+                {/* Supply Chain Visualization (Span 2) */}
+                <div className="lg:col-span-2 h-full">
+                    <SupplyChainWidget />
                 </div>
-            </section>
 
-            {/* Supply Chain Section */}
-            <section className="mb-16">
-                <h2 className="text-3xl font-bold text-text-primary mb-8 flex items-center gap-3">
-                    <Truck className="h-8 w-8 text-primary" />
-                    Supply Chain & Logistics
-                </h2>
-                <div className="bg-surface-elevated rounded-xl p-8 border border-border">
-                    <div className="grid gap-8 md:grid-cols-2">
-                        <div>
-                            <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                                <Leaf className="h-5 w-5 text-success" />
-                                "Farm-to-Shaker" Sourcing
-                            </h3>
-                            <p className="text-text-secondary mb-6">
-                                Himkok's supply chain is short and resilient, relying on close relationships with local producers.
-                            </p>
-                            <ul className="space-y-4">
-                                <li className="flex items-start gap-3">
-                                    <div className="w-2 h-2 mt-2 rounded-full bg-primary" />
-                                    <div>
-                                        <span className="font-medium text-text-primary">Local Farms</span>
-                                        <p className="text-sm text-text-secondary">Direct sourcing of fruits, herbs, and honey from urban bee farms.</p>
-                                    </div>
-                                </li>
-                                <li className="flex items-start gap-3">
-                                    <div className="w-2 h-2 mt-2 rounded-full bg-primary" />
-                                    <div>
-                                        <span className="font-medium text-text-primary">Potato Spirit Base</span>
-                                        <p className="text-sm text-text-secondary">Using leftover local potatoes to distill ethanol, reducing waste.</p>
-                                    </div>
-                                </li>
-                                <li className="flex items-start gap-3">
-                                    <div className="w-2 h-2 mt-2 rounded-full bg-primary" />
-                                    <div>
-                                        <span className="font-medium text-text-primary">On-Site Greenhouse</span>
-                                        <p className="text-sm text-text-secondary">Hydroponic systems for fresh herbs year-round.</p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                {/* Production Status (Span 1) */}
+                <div className="lg:col-span-1 h-full">
+                    <ProductionStatus />
+                </div>
+            </div>
 
-                        <div className="bg-surface p-6 rounded-lg border border-border">
-                            <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                                <BarChart3 className="h-5 w-5 text-accent" />
-                                Inventory Management
-                            </h3>
-                            <p className="text-text-secondary mb-4">
-                                Powered by <strong>Trivec POS</strong> integration.
-                            </p>
-                            <ul className="space-y-3 text-sm text-text-secondary">
-                                <li className="flex items-center gap-2">
-                                    <Clock className="h-4 w-4" /> Real-time stock tracking
-                                </li>
-                                <li className="flex items-center gap-2">
-                                    <Clock className="h-4 w-4" /> Automated re-ordering triggers
-                                </li>
-                                <li className="flex items-center gap-2">
-                                    <Clock className="h-4 w-4" /> Ingredient usage monitoring (Spirits to Garnishes)
-                                </li>
-                            </ul>
-                        </div>
+            {/* Inventory & Logistics Details */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-1 glass-card p-6 rounded-xl border border-white/10">
+                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                        <BarChart3 className="h-5 w-5 text-primary" />
+                        Inventory Alerts
+                    </h3>
+                    <div className="space-y-3">
+                        {[
+                            { item: 'Potato Spirit Base', level: 'Low (15%)', status: 'Ordering' },
+                            { item: 'Fresh Mint', level: 'Critical (5%)', status: 'Urgent' },
+                            { item: 'Glass Bottles', level: 'OK (85%)', status: 'Stable' },
+                        ].map((alert, i) => (
+                            <div key={i} className="flex items-center justify-between text-sm p-2 rounded bg-white/5">
+                                <span className="text-text-primary">{alert.item}</span>
+                                <div className="text-right">
+                                    <span className={`block font-medium ${alert.status === 'Urgent' ? 'text-red-500' : alert.status === 'Ordering' ? 'text-amber-500' : 'text-green-500'}`}>
+                                        {alert.level}
+                                    </span>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
-            </section>
 
-            {/* Quality Control Section */}
-            <section>
-                <h2 className="text-3xl font-bold text-text-primary mb-8 flex items-center gap-3">
-                    <ShieldCheck className="h-8 w-8 text-primary" />
-                    Quality Control
-                </h2>
-                <div className="grid gap-6 md:grid-cols-2">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Batch Testing</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-text-secondary">
-                                Every batch is logged with production date and flavor profile.
-                                Regular tasting ensures that a guest's favorite drink in January tastes identical in June.
-                            </p>
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Shelf Stability</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-text-secondary">
-                                Cocktails are prepared "vacuum bag style" (sous-vide technique) to prevent oxidation,
-                                designed to last at least one year without degradation.
-                            </p>
-                        </CardContent>
-                    </Card>
+                <div className="lg:col-span-2 glass-card p-6 rounded-xl border border-white/10">
+                    <h3 className="text-lg font-semibold mb-4">Operational Efficiency Notes</h3>
+                    <p className="text-text-secondary leading-relaxed">
+                        <strong>Aass Brewery Partnership:</strong> RTD production (Oslo Mule, Paloma) is scaling efficiently with zero capex.
+                        <strong>In-House Distillery:</strong> Operating at near capacity (10,000L/yr). Planning for Northern Whiskey Distillery expansion.
+                        <strong>Staffing:</strong> 42 employees with high revenue/employee ratio (1.26M NOK).
+                    </p>
                 </div>
-            </section>
-        </div>
+            </div>
+        </div >
     );
 }

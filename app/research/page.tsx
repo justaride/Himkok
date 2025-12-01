@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { ResearchCard } from '@/components/research/ResearchCard';
 import { Search, Database, FileText, BarChart3 } from 'lucide-react';
+import { DevelopmentDisclaimer } from '@/components/ui/DevelopmentDisclaimer';
 
 const prisma = new PrismaClient();
 
@@ -34,6 +35,7 @@ export default async function ResearchPage({
 
     return (
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+            <DevelopmentDisclaimer className="mb-8" />
             {/* Header */}
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-text-primary mb-2">Research Intelligence</h1>

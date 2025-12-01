@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { DevelopmentDisclaimer } from '@/components/ui/DevelopmentDisclaimer';
 
 const images = [
     "2309_KITCHENS_NORWAY_111.jpg",
@@ -27,6 +28,7 @@ const images = [
 export default function BrandPage() {
     return (
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+            <DevelopmentDisclaimer className="mb-8" />
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-text-primary mb-2">
                     Brand Assets
